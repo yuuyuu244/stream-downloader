@@ -2,3 +2,9 @@
 *.m3u8
 *.mp4
 *.m4a
+*.ts
+*.log
+*.pyc
+/tmp/
+/movie/
+/.noused/

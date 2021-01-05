@@ -4,22 +4,29 @@ using namespace System.Windows.Forms
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# Open Folder Path
-$OPEN_FOLDER_PATH = "C:\Users\user\Downloads"
+# カレントディレクトリの獲得
+# 特に変更する必要なし
+cd "C:\Program Files Made BySelf\streamDownloader"
+$current = Get-Location
 
-# Program name
-$PROGRAM_NAME = "Stream downloader"
+# Open Folder Path
+# ダウンロード先を指定
+$OPEN_FOLDER_PATH = "${current}\movie"
 
 # 環境変数の設定
 # streamlinkが使えるようにする
-#$env:Path = $env:Path + ";C:\Program Files By My Self\AbemaTV録画"
-$env:Path = $env:Path + ";Z:\30_movie\04_テレビ番組\04_AbemaTV\00_AbemaTV録画"
+# 本アプリケーションがダウンロードされたトップディレクトリを指定
+$DOWNLOAD_DIR = "${current}"
 
-# カレントディレクトリの獲得
-$current = Get-Location
+$env:Path = $env:Path + ";${DOWNLOAD_DIR}"
+
+# Program name
+# 特に変更する必要なし
+$PROGRAM_NAME = "Stream downloader"
 
 # catch句で捕まえられるようにする
 # デフォルトでは「終了エラー」しかとらえられず、「継続エラー」が捕まえられない。
+# 特に変更する必要なし
 $ErrorActionPreference = "Stop"
 
 # ------------------------------------------------------------------
@@ -32,13 +39,14 @@ $ErrorActionPreference = "Stop"
 # ------------------------------------------------------------------
 function ConvertTo-UsedFileName([String]$FileName){
   # 禁止文字(半角記号)
-  $CannotUsedFileName = "\/:*?`"><| 　・＆#"
+  $CannotUsedFileName = '\/:*?`"><| 　・＆#[]'
   # 禁止文字(全角記号)
-  $UsedFileName = "￥／：＊？`”＞＜｜__．&＃"
+  $UsedFileName = '￥／：＊？`”＞＜｜__．&＃［］'
 
   for ($i = 0; $i -lt $UsedFileName.Length; $i++) {
     $FileName = $FileName.Replace($CannotUsedFileName[$i], $UsedFileName[$i])
   }
+  Write-Host("rename file name : ${FileName} ")
   return $FileName
 }
 
@@ -59,8 +67,41 @@ function CheckFileName([String]$FileName){
     return $FileName
 }
 
-# ------------------------------------------------------
+function ExtraTitle([String]$url){
+    # SiteCollection URL 
+    $response = Invoke-WebRequest $url
+    # refs:https://docs.microsoft.com/ja-jp/dotnet/api/system.windows.forms.htmldocument?view=netframework-4.8
+    # refs:http://winscript.jp/powershell/305
+    # refs:http://sloppy-content.blog.jp/archives/12057529.html
+    # タイトルを取得
+    return CheckFileName(ConvertTo-UsedFileName($response.ParsedHtml.Title))
+}
+
+# アベマ生配信用のタイトル取得
+function ExtraTitleNow([String]$url){
+    # SiteCollection URL 
+    $response = Invoke-WebRequest $url -OutFile "a.html"
+    # refs:https://docs.microsoft.com/ja-jp/dotnet/api/system.windows.forms.htmldocument?view=netframework-4.8
+    # refs:http://winscript.jp/powershell/305
+    # refs:http://sloppy-content.blog.jp/archives/12057529.html
+    # タイトルを取得
+    #$response.ParsedHtml.get
+    #$response.AllElements # | Where-Object { $_.tagName -eq 'h2'} | ForEach-Object {
+	#    Write-Host $_.innerText
+   # }
+    #$response.AllElements | Where-Object { $_.tagName -eq 'span'} | ForEach-Object {
+	#    Write-Host $_.innerText
+    #}
+    $html = $response.Content
+    $obj = New-Object -ComObject "$current\a.html"
+    Write-Host($obj)
+
+    #return CheckFileName(ConvertTo-UsedFileName($html.getElementsByTagName("SCRIPT; type=application/ld+json")[0]))
+}
+
+# -------------------------------------------------------
 # ------------ m3u8ファイルダウンロード -----------------
+# -------------------------------------------------------
 
 # ラベルと入力欄
 $lbl1 = New-Object Label
@@ -76,10 +117,10 @@ $mname.Size = New-Object System.Drawing.Size(250,20)
 
 # ボタン(開く...)の設定
 $obtn = New-Object Button
-$obtn.Text = "Open..."
-$obtn.Size = "120, 20"
+$obtn.Text = "Open...  "
+$obtn.Size = New-Object System.Drawing.Size(110,20)
 $obtn.Location = "330, 20"
-$obtn.Size = New-Object System.Drawing.Size(40,20)
+
 
 # ファイル選択ボタン
 $button_Click = {
@@ -125,7 +166,7 @@ $sname.Size = New-Object System.Drawing.Size(250,20)
 # download button of m3u8
 $btn = New-Object Button
 $btn.Text = "download(m3u8)"
-$btn.Size = "120, 20"
+$btn.Size = New-Object System.Drawing.Size(110,20)
 $btn.Location = "330, 50"
 
 # on click listener of download button of m3u8
@@ -137,7 +178,7 @@ $button_Click2 = {
         Write-Host("Downloaded ${output}.mp4")
         [MessageBox]::Show("downloaded :[" + $output + "]", "Info", "OK", "Information")
     } catch [Exception] {
-        [MessageBox]::Show("fail to download :[" + $output + "]", "Error", "OK", "Error")
+        [MessageBox]::Show("fail to download :[" + $output + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
     } finally {
     }
 }
@@ -157,6 +198,8 @@ $lbl_line.BorderStyle = "FixedSingle"
 
 # ------------------------------------------------------
 # -------------- URL download --------------------------
+# ------------------------------------------------------
+
 # ラベルと入力欄
 $lbl_url = New-Object Label
 $lbl_url.Text = "url:"
@@ -188,7 +231,7 @@ $name_save.Size = New-Object System.Drawing.Size(250,20)
 # download button of url download
 $btn_download_url = New-Object Button
 $btn_download_url.Text = "download(URL)"
-$btn_download_url.Size = "120, 20"
+$btn_download_url.Size = New-Object System.Drawing.Size(110,20)
 $btn_download_url.Location = "330, 130"
 
 # ボタンのクリック
@@ -206,18 +249,24 @@ $button_Click_download_url = {
     $url_str = $url_url.Text
     try {
         # URLより動画を(.ts)形式でダウンロードする
-        streamlink "$url_str" best -o "${current}\${random_name}.ts" >> .\$(Get-Date -UFormat %Y%m%d).log
-        # (.ts)形式を(.mp4)形式に変換する
-        ffmpeg -i "${random_name}.ts" -vcodec copy -acodec copy "${random_name}.mp4"
+        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts" >> .\log\$(Get-Date -UFormat %Y%m%d).log
+        
+        Write-Host("comleted to Download")
 
-        mv .\"$random_name.mp4" .\"$nmane_str.mp4"
-        rm .\${random_name}.ts
+        # (.ts)形式を(.mp4)形式に変換する
+        ffmpeg -i ".\tmp\${random_name}.ts" -vcodec copy -acodec copy ".\tmp\${random_name}.mp4"
+        
+        Write-Host("completed convert to mp4")
+
+        mv ".\tmp\${random_name}.mp4" .\movie\"$nmane_str.mp4"
+        rm .\tmp\${random_name}.ts
+        
         Write-Host("Downloaded... [" + $nmane_str + "]")
+        
         [MessageBox]::Show("downloaded :[" + $nmane_str + "]", "Info", "OK", "Information")
 
     } catch [Exception] {
-        [MessageBox]::Show("fail to download :[" + $nmane_str + "]", "Error", "OK", "Error")
-
+        [MessageBox]::Show($_.Exception.Message + "fail to download :[" + $nmane_str + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
     } finally {
     
     }
@@ -227,27 +276,130 @@ $btn_download_url.Add_Click($button_Click_download_url)
 # タイトル抽出ボタン
 $obtn_extract = New-Object Button
 $obtn_extract.Text = "extra title"
-$obtn_extract.Size = "120, 20"
+$obtn_extract.Size = New-Object System.Drawing.Size(110,20)
 $obtn_extract.Location = "330, 100"
-$obtn_extract.Size = New-Object System.Drawing.Size(60,20)
+
 # ボタンのクリック
 # タイトルを抽出する処理
 $button_Click_extract = {
-    # SiteCollection URL 
-    $response = Invoke-WebRequest $url_url.Text
-    # refs:https://docs.microsoft.com/ja-jp/dotnet/api/system.windows.forms.htmldocument?view=netframework-4.8
-    # refs:http://winscript.jp/powershell/305
-    # refs:http://sloppy-content.blog.jp/archives/12057529.html
     # タイトルを取得
-    $name_save.Text = ConvertTo-UsedFileName($response.ParsedHtml.Title)
+    $name_save.Text = ExtraTitle($url_url.Text)
 }
 $obtn_extract.Add_Click($button_Click_extract)
 
+
+# ----------------------------------------------------
+# ------------ abema生配信保存 -----------------------
+# ----------------------------------------------------
+
+# ラベル(区切り線)
+$lbl_now_line = New-Object Label
+$lbl_now_line.Text = ""
+$lbl_now_line.Location = "0, 162"
+$lbl_now_line.Size = "450, 1"
+$lbl_now_line.AutoSize = $False
+$lbl_now_line.BackColor = "white"
+$lbl_now_line.ForeColor = "White"
+$lbl_now_line.BorderStyle = "FixedSingle"
+
+# ラベルと入力欄
+$lbl_now_url = New-Object Label
+$lbl_now_url.Text = "AbemaNow:"
+$lbl_now_url.Location = "10, 172"
+$lbl_now_url.AutoSize = $True
+
+# TextBox of Input URL of url download
+$txt_now_url = New-Object TextBox
+# Default string(set abemaTV URL)
+$txt_now_url.Name = "textbox1"
+$txt_now_url.Text = "https://abema.tv/now-on-air/"
+$txt_now_url.Location = "75, 170"
+$txt_now_url.Size = New-Object System.Drawing.Size(250,20)
+
+# タイトル抽出ボタン
+$obtn_now_extract = New-Object Button
+$obtn_now_extract.Text = "extra title"
+$obtn_now_extract.Size = New-Object System.Drawing.Size(110,20)
+$obtn_now_extract.Location = "330, 170"
+
+# label of save name of url download
+$lbl_now_save = New-Object Label
+$lbl_now_save.Text = "saveName:"
+$lbl_now_save.Location = "10, 202"
+$lbl_now_save.AutoSize = $True
+
+# TextBox of save name of url download
+$txt_now_save = New-Object TextBox
+$txt_now_save.Name = "textbox1"
+$txt_now_save.Text = "input name"
+$txt_now_save.Location = "75, 200"
+$txt_now_save.Size = New-Object System.Drawing.Size(250,20)
+
+$button_now_Click_extract = {
+    # タイトルを取得
+    $txt_now_save.Text = ExtraTitleNow($txt_now_url.Text)
+}
+$obtn_now_extract.Add_Click($button_now_Click_extract)
+
+# download button of url download
+$btn_now_lownload_url = New-Object Button
+$btn_now_lownload_url.Text = "download(URL)"
+$btn_now_lownload_url.Size = New-Object System.Drawing.Size(110,20)
+$btn_now_lownload_url.Location = "330, 200"
+
+
+$button_now_Click_download_url = {
+    ($sender, $e) = $this, $_
+    $parent = ($sender -as [Button]).Parent -as [Form]
+    $txt = [TextBox]$parent.Controls[$url_url.Name];
+    
+    $random_name = Get-Random
+    
+    Write-Host("******************************************")
+    Write-Host("Downloading... [" + $name_save.Text + "]`n")
+    
+    $nmane_str = $name_save.Text
+    $url_str = $url_url.Text
+    try {
+        # URLより動画を(.ts)形式でダウンロードする
+        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts" >> .\log\$(Get-Date -UFormat %Y%m%d).log
+        
+        Write-Host("comleted to Download")
+
+        # (.ts)形式を(.mp4)形式に変換する
+        ffmpeg -i ".\tmp\${random_name}.ts" -vcodec copy -acodec copy ".\tmp\${random_name}.mp4"
+        
+        Write-Host("completed convert to mp4")
+
+        mv ".\tmp\${random_name}.mp4" .\movie\"$nmane_str.mp4"
+        rm .\tmp\${random_name}.ts
+        
+        Write-Host("Downloaded... [" + $nmane_str + "]")
+        
+        [MessageBox]::Show("downloaded :[" + $nmane_str + "]", "Info", "OK", "Information")
+
+    } catch [Exception] {
+        [MessageBox]::Show($_.Exception.Message + "fail to download :[" + $nmane_str + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
+    } finally {
+    
+    }
+}
+$btn_now_lownload_url.Add_Click($button_now_Click_download_url)
+
+$now = @($lbl_now_line,$lbl_now_url, $txt_now_url,$btn_now_lownload_url, $obtn_now_extract,$lbl_now_save,$txt_now_save)
+
+#---------------------------------------------------
 # フォーム設定
 $f = New-Object Form
 $f.Text = $PROGRAM_NAME
-$f.Size = "450, 240"
+$f.Size = "470, 280"
+$f.MaximumSize = "470, 280"
 $f.Controls.AddRange(@($lbl1, $lbl2,$mname, $name_save, $obtn, $btn, $sname, $lbl_line, $lbl_url,$url_url,$lbl_save,$name_save,$btn_download_url,$obtn_extract))
+# abema生配信保存用フォーム追加
+$f.Controls.AddRange($now)
 $f.BackColor = "black"
 $f.forecolor ="white"
+$f.MaximizeBox = $False
+$f.MinimizeBox = $False
+$f.FormBorderStyle = "Fixed3D"
 $f.ShowDialog()
