@@ -8,3 +8,6 @@
 /tmp/
 /movie/
 /.noused/
+/bin/
+/streamConf.ps1
+/stream-reader.conf

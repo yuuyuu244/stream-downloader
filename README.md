@@ -10,6 +10,7 @@
 
 ## 使用言語
 * PowerShell
+* Python (PowerShellのポーティング版 作成中)
 
 ## 事前準備
 * ffmpegを使えるようにインストールします(PATHも通す)
@@ -25,3 +26,5 @@
 
 ## 今後の展望
 * クロスプラットフォームに対応できるように, Pythonで書き換える
+* ffmpegやStreamlinkなどの依存ソフトウェアをBinaryとして同封したい
+

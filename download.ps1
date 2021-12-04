@@ -1,68 +1,118 @@
-# https://48idol.net/Ç©ÇÁÉ_ÉEÉìÉçÅ[ÉhÇ∑ÇÈï˚ñ@
-# édólÇ∆ÇµÇƒÅAdll ÇÃéQè∆í«â¡ÇÊÇËÇ‡ÅAusing ñºëOãÛä‘ÇÃï˚ÇêÊÇ…ãLç⁄ÇµÇ»Ç≠ÇøÇ·Ç¢ÇØÇ»Ç¢
+Ôªø# powershell„ÅÆÂÆüË°åÊ®©Èôê‰øÆÊ≠£
+# Set-ExecutionPolicy Bypass -Scope CurrentUser
+
+# https://48idol.net/„Åã„Çâ„ÉÄ„Ç¶„É≥„É≠„Éº„Éâ„Åô„ÇãÊñπÊ≥ï
+# ‰ªïÊßò„Å®„Åó„Å¶„ÄÅdll „ÅÆÂèÇÁÖßËøΩÂä†„Çà„Çä„ÇÇ„ÄÅusing ÂêçÂâçÁ©∫Èñì„ÅÆÊñπ„ÇíÂÖà„Å´Ë®òËºâ„Åó„Å™„Åè„Å°„ÇÉ„ÅÑ„Åë„Å™„ÅÑ
 using namespace System.Windows.Forms
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# ÉJÉåÉìÉgÉfÉBÉåÉNÉgÉäÇÃälìæ
-# ì¡Ç…ïœçXÇ∑ÇÈïKóvÇ»Çµ
-cd "C:\Program Files Made BySelf\streamDownloader"
+# include config
+. "${PSScriptRoot}\streamConf.ps1"
+
+
+
+# „Ç´„É¨„É≥„Éà„Éá„Ç£„É¨„ÇØ„Éà„É™„ÅÆÁç≤Âæó
+# Áâπ„Å´Â§âÊõ¥„Åô„ÇãÂøÖË¶Å„Å™„Åó
+cd ${FOLDER_PATH}
 $current = Get-Location
 
 # Open Folder Path
-# É_ÉEÉìÉçÅ[ÉhêÊÇéwíË
+# „ÉÄ„Ç¶„É≥„É≠„Éº„ÉâÂÖà„ÇíÊåáÂÆö
 $OPEN_FOLDER_PATH = "${current}\movie"
 
-# ä¬ã´ïœêîÇÃê›íË
-# streamlinkÇ™égÇ¶ÇÈÇÊÇ§Ç…Ç∑ÇÈ
-# ñ{ÉAÉvÉäÉPÅ[ÉVÉáÉìÇ™É_ÉEÉìÉçÅ[ÉhÇ≥ÇÍÇΩÉgÉbÉvÉfÉBÉåÉNÉgÉäÇéwíË
+# Áí∞Â¢ÉÂ§âÊï∞„ÅÆË®≠ÂÆö
+# streamlink„Åå‰Ωø„Åà„Çã„Çà„ÅÜ„Å´„Åô„Çã
+# Êú¨„Ç¢„Éó„É™„Ç±„Éº„Ç∑„Éß„É≥„Åå„ÉÄ„Ç¶„É≥„É≠„Éº„Éâ„Åï„Çå„Åü„Éà„ÉÉ„Éó„Éá„Ç£„É¨„ÇØ„Éà„É™„ÇíÊåáÂÆö
 $DOWNLOAD_DIR = "${current}"
 
-$env:Path = $env:Path + ";${DOWNLOAD_DIR}"
+$env:Path = $env:Path + ";${DOWNLOAD_DIR}\bin"
+$env:Path = $env:Path + ";${DOWNLOAD_DIR}\bin\Streamlink"
+$env:Path = $env:Path  + ";${FFMPEG_PATH}"
 
 # Program name
-# ì¡Ç…ïœçXÇ∑ÇÈïKóvÇ»Çµ
+# Áâπ„Å´Â§âÊõ¥„Åô„ÇãÂøÖË¶Å„Å™„Åó
 $PROGRAM_NAME = "Stream downloader"
 
-# catchãÂÇ≈ïﬂÇ‹Ç¶ÇÁÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈ
-# ÉfÉtÉHÉãÉgÇ≈ÇÕÅuèIóπÉGÉâÅ[ÅvÇµÇ©Ç∆ÇÁÇ¶ÇÁÇÍÇ∏ÅAÅuåpë±ÉGÉâÅ[ÅvÇ™ïﬂÇ‹Ç¶ÇÁÇÍÇ»Ç¢ÅB
-# ì¡Ç…ïœçXÇ∑ÇÈïKóvÇ»Çµ
-$ErrorActionPreference = "Stop"
+# Âü∫Ê∫ñ„ÅÆÊ®™ÂπÖ
+$CRITERIA_WIDTH = 10
+
+# Âü∫Ê∫ñ„ÅÆÊ®™ÂπÖ
+$CRITERIA_WIDTH_2 = $CRITERIA_WIDTH + 65
+
+# Âü∫Ê∫ñ„ÅÆÊ®™ÂπÖ
+$CRITERIA_WIDTH_3 = $CRITERIA_WIDTH_2 + 285
+
+# Âü∫Ê∫ñ„ÅÆÈ´ò„Åï
+$CRITERIA_HEIGHT = 15
+
+# È´ò„Åï„ÅÆÂùáÁ≠âÂπÖ
+$HEIGHT_SPACE = 30
+
+# Âü∫Ê∫ñ„ÅÆÈ´ò„Åï(URL)
+$CRITERIA_HEIGHT_URL = 100
+
+# „Çø„Ç§„Éà„É´„É©„Éô„É´„ÅÆ„Éá„Éï„Ç©„É´„ÉàÈï∑
+$TITLE_LENGTH = 60
+
+# „ÉÜ„Ç≠„Çπ„Éà„ÅÆ„Éá„Éï„Ç©„É´„ÉàÈï∑
+$TEXT_LENGTH = 270
+
+# „Éú„Çø„É≥„ÅÆ„Éá„Éï„Ç©„É´„ÉàÈï∑
+$BTN_LENGTH = 110
+
+# È´ò„Åï
+$DEFAULT_HEIGHT_SIZE = 20
+
+# catchÂè•„ÅßÊçï„Åæ„Åà„Çâ„Çå„Çã„Çà„ÅÜ„Å´„Åô„Çã
+# „Éá„Éï„Ç©„É´„Éà„Åß„ÅØ„ÄåÁµÇ‰∫Ü„Ç®„É©„Éº„Äç„Åó„Åã„Å®„Çâ„Åà„Çâ„Çå„Åö„ÄÅ„ÄåÁ∂ôÁ∂ö„Ç®„É©„Éº„Äç„ÅåÊçï„Åæ„Åà„Çâ„Çå„Å™„ÅÑ„ÄÇ
+# Áâπ„Å´Â§âÊõ¥„Åô„ÇãÂøÖË¶Å„Å™„Åó
+# Continue : „Éá„Éê„ÉÉ„Ç∞Áî®
+$ErrorActionPreference = "Continue"
+
+#$ErrorActionPreference = "Stop"
+
 
 # ------------------------------------------------------------------
-# WindowsÇ≈ÉtÉ@ÉCÉãñºÇ…égópÇ≈Ç´Ç»Ç¢ã÷é~ï∂éöÇëSäpÇ…ïœä∑Ç∑ÇÈ
-# ä÷êîñºÅFConvertTo-UsedFileName
-# à¯êî  ÅFFileName ÉtÉ@ÉCÉãñº
-# ñﬂÇËílÅFïœä∑å„ÇÃÉtÉ@ÉCÉãñº
+# Windows„Åß„Éï„Ç°„Ç§„É´Âêç„Å´‰ΩøÁî®„Åß„Åç„Å™„ÅÑÁ¶ÅÊ≠¢ÊñáÂ≠ó„ÇíÂÖ®Ëßí„Å´Â§âÊèõ„Åô„Çã
+# Èñ¢Êï∞ÂêçÔºöConvertTo-UsedFileName
+# ÂºïÊï∞  ÔºöFileName „Éï„Ç°„Ç§„É´Âêç
+# Êàª„ÇäÂÄ§ÔºöÂ§âÊèõÂæå„ÅÆ„Éï„Ç°„Ç§„É´Âêç
 # @author : Yuki-Kikuya
 # refs : http://assembler0x.blogspot.com/2013/08/windows.html
 # ------------------------------------------------------------------
 function ConvertTo-UsedFileName([String]$FileName){
-  # ã÷é~ï∂éö(îºäpãLçÜ)
-  $CannotUsedFileName = '\/:*?`"><| Å@ÅEÅï#[]'
-  # ã÷é~ï∂éö(ëSäpãLçÜ)
-  $UsedFileName = 'ÅèÅ^ÅFÅñÅH`ÅhÅÑÅÉÅb__ÅD&ÅîÅmÅn'
+  # Á¶ÅÊ≠¢ÊñáÂ≠ó(ÂçäËßíË®òÂè∑)
+  $CannotUsedFileName = '\/:*?`"><| „ÄÄ„ÉªÔºÜ#[]'
+  # Á¶ÅÊ≠¢ÊñáÂ≠ó(ÂÖ®ËßíË®òÂè∑)
+  $UsedFileName = 'Ôø•ÔºèÔºöÔºäÔºü`‚ÄùÔºûÔºúÔΩú__Ôºé&ÔºÉÔºªÔºΩ'
 
   for ($i = 0; $i -lt $UsedFileName.Length; $i++) {
     $FileName = $FileName.Replace($CannotUsedFileName[$i], $UsedFileName[$i])
   }
-  Write-Host("rename file name : ${FileName} ")
+  if ($FileName.Contains("_ÔΩú_ÁÑ°ÊñôÂãïÁîªÔºéË¶ãÈÄÉ„ÅóÈÖç‰ø°„ÇíË¶ã„Çã„Å™„Çâ_ÔΩú_ABEMA")) {
+    $FileName = $FileName.Substring(0, $FileName.Length - 26);
+  }
+  if ($FileName.Contains("_ÔΩú_ÁÑ°Êñô„ÅßÂãïÁîª&Ë¶ãÈÄÉ„ÅóÈÖç‰ø°„ÇíË¶ã„Çã„Å™„Çâ„ÄêABEMA„Éì„Éá„Ç™„Äë")){
+    $FileName = $FileName.Substring(0, $FileName.Length - 27);
+  }
+  Write-Host("[Info] rename file name : ${FileName} ")
   return $FileName
 }
 
 # ------------------------------------------------------------------
-# ÉtÉ@ÉCÉãñºÇÃí∑Ç≥É`ÉFÉbÉN
-# à¯êî  ÅFFileName ÉtÉ@ÉCÉãñº
+# „Éï„Ç°„Ç§„É´Âêç„ÅÆÈï∑„Åï„ÉÅ„Çß„ÉÉ„ÇØ
+# ÂºïÊï∞  ÔºöFileName „Éï„Ç°„Ç§„É´Âêç
 # @author : Yuki-Kikuya
 # ------------------------------------------------------------------
 function CheckFileName([String]$FileName){
-    $MAX_FILE_NAME_LENGTH = 150
+    $MAX_FILE_NAME_LENGTH = 120
     if ($FileName.Length -gt $MAX_FILE_NAME_LENGTH) {
-        # ï∂éöóÒÇÃëOÇ©ÇÁ255ï∂éöï™ÇæÇØíäèo
-        $FileName= $FileName.Substring(0,$MAX_FILE_NAME_LENGTH)
-        Write-Host("ï∂éöóÒèkè¨")
+        # ÊñáÂ≠óÂàó„ÅÆÂâç„Åã„Çâ255ÊñáÂ≠óÂàÜ„Å†„ÅëÊäΩÂá∫
+        $FileName = $FileName.Substring(0, $MAX_FILE_NAME_LENGTH)
+        Write-Host("[Info] ÊñáÂ≠óÂàóÁ∏ÆÂ∞è : ${FileName}")
     } else {
-        Write-Host("no modify string of file name")
+        Write-Host("[Info] no modify string of file name : ${FileName}")
     }
     return $FileName
 }
@@ -73,18 +123,18 @@ function ExtraTitle([String]$url){
     # refs:https://docs.microsoft.com/ja-jp/dotnet/api/system.windows.forms.htmldocument?view=netframework-4.8
     # refs:http://winscript.jp/powershell/305
     # refs:http://sloppy-content.blog.jp/archives/12057529.html
-    # É^ÉCÉgÉãÇéÊìæ
+    # „Çø„Ç§„Éà„É´„ÇíÂèñÂæó
     return CheckFileName(ConvertTo-UsedFileName($response.ParsedHtml.Title))
 }
 
-# ÉAÉxÉ}ê∂îzêMópÇÃÉ^ÉCÉgÉãéÊìæ
+# „Ç¢„Éô„ÉûÁîüÈÖç‰ø°Áî®„ÅÆ„Çø„Ç§„Éà„É´ÂèñÂæó
 function ExtraTitleNow([String]$url){
     # SiteCollection URL 
     $response = Invoke-WebRequest $url -OutFile "a.html"
     # refs:https://docs.microsoft.com/ja-jp/dotnet/api/system.windows.forms.htmldocument?view=netframework-4.8
     # refs:http://winscript.jp/powershell/305
     # refs:http://sloppy-content.blog.jp/archives/12057529.html
-    # É^ÉCÉgÉãÇéÊìæ
+    # „Çø„Ç§„Éà„É´„ÇíÂèñÂæó
     #$response.ParsedHtml.get
     #$response.AllElements # | Where-Object { $_.tagName -eq 'h2'} | ForEach-Object {
 	#    Write-Host $_.innerText
@@ -99,38 +149,68 @@ function ExtraTitleNow([String]$url){
     #return CheckFileName(ConvertTo-UsedFileName($html.getElementsByTagName("SCRIPT; type=application/ld+json")[0]))
 }
 
+
+
+function Output-File([String] $FileName, [String] $Data) {
+    Write-Host "[Info] Output-File (FileName) : " + $FileName
+    Write-Host "[Info]" + $Data
+    Add-Content -LiteralPath ${FileName} -Value "${Data}"
+}
+
+function Output-HistoryFile([String] $Data) {
+    Write-Host "[Info] Output-HistoryFile : " + $Data
+    Output-File ${HISTORY_PATH} ${Data} 
+}
+
+function Input-File([String]$FileName) {
+    return $(Get-Content ${FileName} -last 5)
+}
+
+function Input-HistoryFile() {
+	return Input-File(${HISTORY_PATH})
+}
+
+#---------------------------------------------------
+# „Éï„Ç©„Éº„É†Ë®≠ÂÆö
+$f = New-Object Form
+$f.Text = $PROGRAM_NAME
+$f.Size = [string]($CRITERIA_WIDTH_3 + 150) + ", "+ ($CRITERIA_HEIGHT + 320)
+$f.MaximumSize = [string]($CRITERIA_WIDTH_3 + 500) + ", " + ($CRITERIA_HEIGHT + 320)
+#---------------------------------------------------
+
+
 # -------------------------------------------------------
-# ------------ m3u8ÉtÉ@ÉCÉãÉ_ÉEÉìÉçÅ[Éh -----------------
+# ------------ m3u8„Éï„Ç°„Ç§„É´„ÉÄ„Ç¶„É≥„É≠„Éº„Éâ -----------------
 # -------------------------------------------------------
 
-# ÉâÉxÉãÇ∆ì¸óÕóì
+# „É©„Éô„É´„Å®ÂÖ•ÂäõÊ¨Ñ
 $lbl1 = New-Object Label
 $lbl1.Text = "m3u8File:"
-$lbl1.Location = "10, 22"
-$lbl1.AutoSize = $True
+$lbl1.Location = ([string]$CRITERIA_WIDTH) + ", " + ($CRITERIA_HEIGHT + 22)
+$lbl1.Size = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
 
 $mname = New-Object TextBox
 $mname.Name = "textbox1"
 $mname.Text = "select m3u8 file"
-$mname.Location = "75, 20"
-$mname.Size = New-Object System.Drawing.Size(250,20)
+$mname.Location = "75, " + ($CRITERIA_HEIGHT + 20)
+$mname.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${$DEFAULT_HEIGHT_SIZE})
 
-# É{É^Éì(äJÇ≠...)ÇÃê›íË
+# „Éú„Çø„É≥(Èñã„Åè...)„ÅÆË®≠ÂÆö
 $obtn = New-Object Button
 $obtn.Text = "Open...  "
-$obtn.Size = New-Object System.Drawing.Size(110,20)
-$obtn.Location = "330, 20"
+$obtn.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$obtn.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT + 20)
 
 
-# ÉtÉ@ÉCÉãëIëÉ{É^Éì
+# „Éï„Ç°„Ç§„É´ÈÅ∏Êäû„Éú„Çø„É≥
 $button_Click = {
-    #ÉtÉ@ÉCÉãëIëÉ_ÉCÉAÉçÉOÇÃÉIÉuÉWÉFÉNÉgéÊìæ
+    #„Éï„Ç°„Ç§„É´ÈÅ∏Êäû„ÉÄ„Ç§„Ç¢„É≠„Ç∞„ÅÆ„Ç™„Éñ„Ç∏„Çß„ÇØ„ÉàÂèñÂæó
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
      
-    #ÉtÉBÉãÉ^èåèÇÃê›íË
+    #„Éï„Ç£„É´„ÇøÊù°‰ª∂„ÅÆË®≠ÂÆö
     $dialog.Filter = 'm3u8 Files|*.m3u8|Text Files|*.txt|Csv Files|*.csv|All Files|*.*'
      
-    #ÉfÉtÉHÉãÉgëIëÉfÉBÉåÉNÉgÉäÇÃê›íË
+    #„Éá„Éï„Ç©„É´„ÉàÈÅ∏Êäû„Éá„Ç£„É¨„ÇØ„Éà„É™„ÅÆË®≠ÂÆö
     $dialog.InitialDirectory = $OPEN_FOLDER_PATH
 
     if ($dialog.ShowDialog() -eq "OK") {
@@ -143,9 +223,9 @@ $button_Click = {
         $mname.Text = $dialog.FileName
         $sname.Text = CheckFileName([System.IO.Path]::GetFileNameWithoutExtension($dialog.FileName))
         $sname.Text = ConvertTo-UsedFileName($sname.Text)
-        "ëIëÇµÇΩÉtÉ@ÉCÉã`n`"" + $dialog.FileName + '"'
+        "ÈÅ∏Êäû„Åó„Åü„Éï„Ç°„Ç§„É´`n`"" + $dialog.FileName + '"'
     } else {
-        'ëIëÇ»ÇµÅB'
+        'ÈÅ∏Êäû„Å™„Åó„ÄÇ'
     }
 }
 $obtn.Add_Click($button_Click)
@@ -153,21 +233,21 @@ $obtn.Add_Click($button_Click)
 # Label of save name of m3u8
 $lbl2 = New-Object Label
 $lbl2.Text = "saveName:"
-$lbl2.Location = "10, 52"
-$lbl2.AutoSize = $True
+$lbl2.Location = "10, " + ($CRITERIA_HEIGHT + 52)
+$lbl2.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
 
 # TextBox of save name of m3u8
 $sname = New-Object TextBox
 $sname.Name = "textbox1"
 $sname.Text = "input title"
-$sname.Location = "75, 50"
-$sname.Size = New-Object System.Drawing.Size(250,20)
+$sname.Location = "75, " + ($CRITERIA_HEIGHT + 50)
+$sname.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
 
 # download button of m3u8
 $btn = New-Object Button
 $btn.Text = "download(m3u8)"
-$btn.Size = New-Object System.Drawing.Size(110,20)
-$btn.Location = "330, 50"
+$btn.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$btn.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT + 50)
 
 # on click listener of download button of m3u8
 $button_Click2 = {
@@ -175,7 +255,7 @@ $button_Click2 = {
     $output = $sname.Text
     try {
         ffmpeg -protocol_whitelist file,http,https,tcp,tls,crypto -i "${m3u8}" -movflags faststart -c copy "${output}.mp4"
-        Write-Host("Downloaded ${output}.mp4")
+        Write-Host("[Info] Downloaded ${output}.mp4")
         [MessageBox]::Show("downloaded :[" + $output + "]", "Info", "OK", "Information")
     } catch [Exception] {
         [MessageBox]::Show("fail to download :[" + $output + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
@@ -186,10 +266,10 @@ $btn.Add_Click($button_Click2)
 
 
 #-------------------------------------------------------
-# ÉâÉxÉã(ãÊêÿÇËê¸)
+# „É©„Éô„É´(Âå∫Âàá„ÇäÁ∑ö)
 $lbl_line = New-Object Label
 $lbl_line.Text = ""
-$lbl_line.Location = "0, 85"
+$lbl_line.Location = "0, " + ($CRITERIA_HEIGHT + 85)
 $lbl_line.Size = "450, 1"
 $lbl_line.AutoSize = $False
 $lbl_line.BackColor = "white"
@@ -200,41 +280,45 @@ $lbl_line.BorderStyle = "FixedSingle"
 # -------------- URL download --------------------------
 # ------------------------------------------------------
 
-# ÉâÉxÉãÇ∆ì¸óÕóì
+# „É©„Éô„É´„Å®ÂÖ•ÂäõÊ¨Ñ
 $lbl_url = New-Object Label
-$lbl_url.Text = "url:"
-$lbl_url.Location = "10, 102"
-$lbl_url.AutoSize = $True
+$lbl_url.Text = "Url:"
+$lbl_url.Location = "10, " + ($CRITERIA_HEIGHT + $CRITERIA_HEIGHT_URL  +2)
+$lbl_url.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
 
 # TextBox of Input URL of url download
-$url_url = New-Object TextBox
+$url_url = New-Object System.Windows.Forms.Combobox
 # Default string(set abemaTV URL)
 $url_url.Name = "textbox1"
 $url_url.Text = "https://abema.tv/"
-$url_url.Location = "75, 100"
-$url_url.Size = New-Object System.Drawing.Size(250,20)
+$url_url.Location = "75, " + ($CRITERIA_HEIGHT + $CRITERIA_HEIGHT_URL)
+$url_url.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${$DEFAULT_HEIGHT_SIZE})
+
+if( Test-Path .\.history ) {
+	Input-HistoryFile | % { [void] $url_url.Items.Add($_) }
+}
 
 # label of save name of url download
 $lbl_save = New-Object Label
-$lbl_save.Text = "saveName:"
-$lbl_save.Location = "10, 132"
-$lbl_save.AutoSize = $True
+$lbl_save.Text = "SaveName:"
+$lbl_save.Location = "10, " + ($CRITERIA_HEIGHT + 132)
+$lbl_save.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
 
 # TextBox of save name of url download
 $name_save = New-Object TextBox
 $name_save.Name = "textbox1"
 $name_save.Text = "input name"
-$name_save.Location = "75, 130"
-$name_save.Size = New-Object System.Drawing.Size(250,20)
+$name_save.Location = "75, " + ($CRITERIA_HEIGHT + 130)
+$name_save.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${$DEFAULT_HEIGHT_SIZE})
 
 
 # download button of url download
 $btn_download_url = New-Object Button
 $btn_download_url.Text = "download(URL)"
-$btn_download_url.Size = New-Object System.Drawing.Size(110,20)
-$btn_download_url.Location = "330, 130"
+$btn_download_url.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$btn_download_url.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT + 130)
 
-# É{É^ÉìÇÃÉNÉäÉbÉN
+# „Éú„Çø„É≥„ÅÆ„ÇØ„É™„ÉÉ„ÇØ
 $button_Click_download_url = {
     ($sender, $e) = $this, $_
     $parent = ($sender -as [Button]).Parent -as [Form]
@@ -242,18 +326,21 @@ $button_Click_download_url = {
     
     $random_name = Get-Random
     
-    Write-Host("******************************************")
-    Write-Host("Downloading... [" + $name_save.Text + "]`n")
+    Write-Host("[Info] ******************************************")
+    Write-Host("[Info] Downloading... [" + $name_save.Text + "]`n")
     
     $nmane_str = $name_save.Text
     $url_str = $url_url.Text
+
     try {
-        # URLÇÊÇËìÆâÊÇ(.ts)å`éÆÇ≈É_ÉEÉìÉçÅ[ÉhÇ∑ÇÈ
-        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts" >> .\log\$(Get-Date -UFormat %Y%m%d).log
+    	
+        # URL„Çà„ÇäÂãïÁîª„Çí(.ts)ÂΩ¢Âºè„Åß„ÉÄ„Ç¶„É≥„É≠„Éº„Éâ„Åô„Çã
+        #Start-Job -ScriptBlock 
+        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts"  >> .\log\$(Get-Date -UFormat %Y%m%d).log 
         
         Write-Host("comleted to Download")
 
-        # (.ts)å`éÆÇ(.mp4)å`éÆÇ…ïœä∑Ç∑ÇÈ
+        # (.ts)ÂΩ¢Âºè„Çí(.mp4)ÂΩ¢Âºè„Å´Â§âÊèõ„Åô„Çã
         ffmpeg -i ".\tmp\${random_name}.ts" -vcodec copy -acodec copy ".\tmp\${random_name}.mp4"
         
         Write-Host("completed convert to mp4")
@@ -261,11 +348,12 @@ $button_Click_download_url = {
         mv ".\tmp\${random_name}.mp4" .\movie\"$nmane_str.mp4"
         rm .\tmp\${random_name}.ts
         
-        Write-Host("Downloaded... [" + $nmane_str + "]")
+        Write-Host("[Info] Downloaded... [" + $nmane_str + "]")
         
         [MessageBox]::Show("downloaded :[" + $nmane_str + "]", "Info", "OK", "Information")
 
     } catch [Exception] {
+        Write-Host("[Error]" + $_.Exception.Message)
         [MessageBox]::Show($_.Exception.Message + "fail to download :[" + $nmane_str + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
     } finally {
     
@@ -273,70 +361,181 @@ $button_Click_download_url = {
 }
 $btn_download_url.Add_Click($button_Click_download_url)
 
-# É^ÉCÉgÉãíäèoÉ{É^Éì
+# „Çø„Ç§„Éà„É´ÊäΩÂá∫„Éú„Çø„É≥
 $obtn_extract = New-Object Button
 $obtn_extract.Text = "extra title"
-$obtn_extract.Size = New-Object System.Drawing.Size(110,20)
-$obtn_extract.Location = "330, 100"
+$obtn_extract.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$obtn_extract.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT + 100)
 
-# É{É^ÉìÇÃÉNÉäÉbÉN
-# É^ÉCÉgÉãÇíäèoÇ∑ÇÈèàóù
+# „Éú„Çø„É≥„ÅÆ„ÇØ„É™„ÉÉ„ÇØ
+# „Çø„Ç§„Éà„É´„ÇíÊäΩÂá∫„Åô„ÇãÂá¶ÁêÜ
 $button_Click_extract = {
-    # É^ÉCÉgÉãÇéÊìæ
+    # Â±•Ê≠¥„Éï„Ç°„Ç§„É´„Å´URL„ÇíÂá∫Âäõ
+    Output-HistoryFile($url_url.Text)
+    [void] $url_url.Items.Add($url_url.Text)
+
+    # „Çø„Ç§„Éà„É´„ÇíÂèñÂæó
     $name_save.Text = ExtraTitle($url_url.Text)
 }
 $obtn_extract.Add_Click($button_Click_extract)
 
 
 # ----------------------------------------------------
-# ------------ abemaê∂îzêMï€ë∂ -----------------------
+# ------------ abemaÁîüÈÖç‰ø°‰øùÂ≠ò -----------------------
 # ----------------------------------------------------
 
-# ÉâÉxÉã(ãÊêÿÇËê¸)
+# abemaÁîüÈÖç‰ø°‰øùÂ≠ò„ÅÆÂü∫Ê∫ñ„ÅÆÈ´ò„Åï
+$CRITERIA_HEIGHT_NOW = $CRITERIA_HEIGHT + 170
+
+# „É©„Éô„É´(Âå∫Âàá„ÇäÁ∑ö)
 $lbl_now_line = New-Object Label
 $lbl_now_line.Text = ""
-$lbl_now_line.Location = "0, 162"
+$lbl_now_line.Location = "0, " + ($CRITERIA_HEIGHT_NOW - 12)
 $lbl_now_line.Size = "450, 1"
 $lbl_now_line.AutoSize = $False
 $lbl_now_line.BackColor = "white"
 $lbl_now_line.ForeColor = "White"
 $lbl_now_line.BorderStyle = "FixedSingle"
 
-# ÉâÉxÉãÇ∆ì¸óÕóì
+# „É©„Éô„É´„Å®ÂÖ•ÂäõÊ¨Ñ
 $lbl_now_url = New-Object Label
 $lbl_now_url.Text = "AbemaNow:"
-$lbl_now_url.Location = "10, 172"
-$lbl_now_url.AutoSize = $True
+$lbl_now_url.Location = "10, " + ($CRITERIA_HEIGHT_NOW + 2)
+$lbl_now_url.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
 
 # TextBox of Input URL of url download
-$txt_now_url = New-Object TextBox
+$txt_now_url = New-Object System.Windows.Forms.Combobox
 # Default string(set abemaTV URL)
 $txt_now_url.Name = "textbox1"
 $txt_now_url.Text = "https://abema.tv/now-on-air/"
-$txt_now_url.Location = "75, 170"
-$txt_now_url.Size = New-Object System.Drawing.Size(250,20)
+$txt_now_url.Location = "75, " + ($CRITERIA_HEIGHT_NOW + 2)
+$txt_now_url.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${$DEFAULT_HEIGHT_SIZE})
 
-# É^ÉCÉgÉãíäèoÉ{É^Éì
+[void] $txt_now_url.Items.Add("https://abema.tv/now-on-air/abema-news")
+[void] $txt_now_url.Items.Add("https://abema.tv/now-on-air/news-plus")
+[void] $txt_now_url.Items.Add("https://abema.tv/now-on-air/abema-special")
+[void] $txt_now_url.Items.Add("https://abema.tv/now-on-air/special-plus")
+[void] $txt_now_url.Items.Add("https://abema.tv/now-on-air/special-plus-2")
+
+
+# „Çø„Ç§„Éà„É´ÊäΩÂá∫„Éú„Çø„É≥
 $obtn_now_extract = New-Object Button
 $obtn_now_extract.Text = "extra title"
-$obtn_now_extract.Size = New-Object System.Drawing.Size(110,20)
-$obtn_now_extract.Location = "330, 170"
+$obtn_now_extract.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$obtn_now_extract.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT_NOW)
+
+# label of save name of url download
+$lbl_now_save_time = New-Object Label
+$lbl_now_save_time.Text = "saveTime:"
+$lbl_now_save_time.Location = [string]($CRITERIA_WIDTH) + ", " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE + 2)
+$lbl_now_save_time.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
+
+# „Ç≥„É≥„Éú„Éú„ÉÉ„ÇØ„Çπ„Çí‰ΩúÊàê
+# @refs : https://letspowershell.blogspot.com/2015/07/powershell_29.html
+$Combo_now_time1 = New-Object System.Windows.Forms.Combobox
+$Combo_now_time1.Location = [string]($CRITERIA_WIDTH_2) + "," + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE)
+$Combo_now_time1.size = New-Object System.Drawing.Size(50,30)
+$Combo_now_time1.DropDownStyle = "DropDown"
+$Combo_now_time1.FlatStyle = "standard"
+$Combo_now_time1.BackColor = "black"
+$Combo_now_time1.ForeColor = "white"
+
+[void] $Combo_now_time1.Items.Add("00")
+[void] $Combo_now_time1.Items.Add("01")
+[void] $Combo_now_time1.Items.Add("02")
+[void] $Combo_now_time1.Items.Add("03")
+[void] $Combo_now_time1.Items.Add("04")
+[void] $Combo_now_time1.Items.Add("05")
+[void] $Combo_now_time1.Items.Add("06")
+[void] $Combo_now_time1.Items.Add("07")
+[void] $Combo_now_time1.Items.Add("08")
+[void] $Combo_now_time1.Items.Add("09")
+[void] $Combo_now_time1.Items.Add("10")
+$Combo_now_time1.SelectedIndex = 0
+
+# label of save name of url download
+$lbl_now_save_time1 = New-Object Label
+$lbl_now_save_time1.Text = "H"
+$lbl_now_save_time1.Location = [string]($CRITERIA_WIDTH_2 + 55) + ", " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE + 2)
+$lbl_now_save_time1.AutoSize = New-Object System.Drawing.Size(${TITLE_LENGTH}, $DEFAULT_HEIGHT_SIZE)
+
+$Combo_now_time2 = New-Object System.Windows.Forms.Combobox
+$Combo_now_time2.Location = [string]($CRITERIA_WIDTH_2 + 70) + "," + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE)
+$Combo_now_time2.size = New-Object System.Drawing.Size(50,30)
+$Combo_now_time2.DropDownStyle = "DropDown"
+$Combo_now_time2.FlatStyle = "standard"
+$Combo_now_time2.BackColor = "black"
+$Combo_now_time2.ForeColor = "white"
+
+
+[void] $Combo_now_time2.Items.Add("00")
+[void] $Combo_now_time2.Items.Add("01")
+[void] $Combo_now_time2.Items.Add("02")
+[void] $Combo_now_time2.Items.Add("03")
+[void] $Combo_now_time2.Items.Add("04")
+[void] $Combo_now_time2.Items.Add("05")
+[void] $Combo_now_time2.Items.Add("06")
+[void] $Combo_now_time2.Items.Add("07")
+[void] $Combo_now_time2.Items.Add("08")
+[void] $Combo_now_time2.Items.Add("09")
+[void] $Combo_now_time2.Items.Add("10")
+$Combo_now_time2.SelectedIndex = 0
+
+
+# label of save name of url download
+$lbl_now_save_time2 = New-Object Label
+$lbl_now_save_time2.Text = "M"
+$lbl_now_save_time2.Location = [string]($CRITERIA_WIDTH_2 + 70 + 55) + ", " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE + 2)
+$lbl_now_save_time2.AutoSize = $True
+
+# Áßí
+$Combo_now_time3 = New-Object System.Windows.Forms.Combobox
+$Combo_now_time3.Location = [string]($CRITERIA_WIDTH_2 + 140) + "," + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE)
+$Combo_now_time3.size = New-Object System.Drawing.Size(50,30)
+$Combo_now_time3.DropDownStyle = "DropDown"
+$Combo_now_time3.FlatStyle = "standard"
+$Combo_now_time3.BackColor = "black"
+$Combo_now_time3.ForeColor = "white"
+
+
+[void] $Combo_now_time3.Items.Add("00")
+[void] $Combo_now_time3.Items.Add("01")
+[void] $Combo_now_time3.Items.Add("02")
+[void] $Combo_now_time3.Items.Add("03")
+[void] $Combo_now_time3.Items.Add("04")
+[void] $Combo_now_time3.Items.Add("05")
+[void] $Combo_now_time3.Items.Add("06")
+[void] $Combo_now_time3.Items.Add("07")
+[void] $Combo_now_time3.Items.Add("08")
+[void] $Combo_now_time3.Items.Add("09")
+[void] $Combo_now_time3.Items.Add("10")
+$Combo_now_time3.SelectedIndex = 0
+
+# Á∑®ÈõÜÁ¶ÅÊ≠¢
+$Combo_now_time3.DropDownStyle = "DropDownList"
+
+
+# label of save name of url download
+$lbl_now_save_time3 = New-Object Label
+$lbl_now_save_time3.Text = "S"
+$lbl_now_save_time3.Location = [string]($CRITERIA_WIDTH_2 + 140 + 55) + ", " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE + 2)
+$lbl_now_save_time3.AutoSize = $True
 
 # label of save name of url download
 $lbl_now_save = New-Object Label
 $lbl_now_save.Text = "saveName:"
-$lbl_now_save.Location = "10, 202"
+$lbl_now_save.Location = "10, " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE * 2 + 2)
 $lbl_now_save.AutoSize = $True
 
 # TextBox of save name of url download
 $txt_now_save = New-Object TextBox
 $txt_now_save.Name = "textbox1"
 $txt_now_save.Text = "input name"
-$txt_now_save.Location = "75, 200"
-$txt_now_save.Size = New-Object System.Drawing.Size(250,20)
+$txt_now_save.Location = "75, " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE * 2)
+$txt_now_save.Size = New-Object System.Drawing.Size(${TEXT_LENGTH}, ${$DEFAULT_HEIGHT_SIZE})
 
 $button_now_Click_extract = {
-    # É^ÉCÉgÉãÇéÊìæ
+    # „Çø„Ç§„Éà„É´„ÇíÂèñÂæó
     $txt_now_save.Text = ExtraTitleNow($txt_now_url.Text)
 }
 $obtn_now_extract.Add_Click($button_now_Click_extract)
@@ -344,8 +543,8 @@ $obtn_now_extract.Add_Click($button_now_Click_extract)
 # download button of url download
 $btn_now_lownload_url = New-Object Button
 $btn_now_lownload_url.Text = "download(URL)"
-$btn_now_lownload_url.Size = New-Object System.Drawing.Size(110,20)
-$btn_now_lownload_url.Location = "330, 200"
+$btn_now_lownload_url.Size = New-Object System.Drawing.Size(${BTN_LENGTH}, ${DEFAULT_HEIGHT_SIZE})
+$btn_now_lownload_url.Location = ([String]$CRITERIA_WIDTH_3) +", " + ($CRITERIA_HEIGHT_NOW + $HEIGHT_SPACE * 2)
 
 
 $button_now_Click_download_url = {
@@ -355,30 +554,33 @@ $button_now_Click_download_url = {
     
     $random_name = Get-Random
     
-    Write-Host("******************************************")
-    Write-Host("Downloading... [" + $name_save.Text + "]`n")
+    Write-Host("[Info] ******************************************")
+    Write-Host("[Info] Downloading... [" + $name_save.Text + "]`n")
     
-    $nmane_str = $name_save.Text
-    $url_str = $url_url.Text
+    $nmane_str = $txt_now_save.Text
+    $url_str = $txt_now_url.Text
+    $save_time_str = $Combo_now_time1.Text + ":" + $Combo_now_time2.Text + ":" + $Combo_now_time3.Text
+    Write-Host("$save_time_str")
     try {
-        # URLÇÊÇËìÆâÊÇ(.ts)å`éÆÇ≈É_ÉEÉìÉçÅ[ÉhÇ∑ÇÈ
-        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts" >> .\log\$(Get-Date -UFormat %Y%m%d).log
+        # URL„Çà„ÇäÂãïÁîª„Çí(.ts)ÂΩ¢Âºè„Åß„ÉÄ„Ç¶„É≥„É≠„Éº„Éâ„Åô„Çã
+        streamlink "$url_str" best -o "${current}\tmp\${random_name}.ts" --hls-duration ${save_time_str}  >> .\log\$(Get-Date -UFormat %Y%m%d).log
         
-        Write-Host("comleted to Download")
+        Write-Host("[Info] comleted to Download ts file(.ts)")
 
-        # (.ts)å`éÆÇ(.mp4)å`éÆÇ…ïœä∑Ç∑ÇÈ
+        # (.ts)ÂΩ¢Âºè„Çí(.mp4)ÂΩ¢Âºè„Å´Â§âÊèõ„Åô„Çã
         ffmpeg -i ".\tmp\${random_name}.ts" -vcodec copy -acodec copy ".\tmp\${random_name}.mp4"
         
-        Write-Host("completed convert to mp4")
+        Write-Host("[Info] completed convert to mp4")
 
         mv ".\tmp\${random_name}.mp4" .\movie\"$nmane_str.mp4"
         rm .\tmp\${random_name}.ts
         
-        Write-Host("Downloaded... [" + $nmane_str + "]")
+        Write-Host("[Info] Downloaded... [" + $nmane_str + "]")
         
-        [MessageBox]::Show("downloaded :[" + $nmane_str + "]", "Info", "OK", "Information")
+        [MessageBox]::Show("[Info] downloaded :[" + $nmane_str + "]", "Info", "OK", "Information")
 
     } catch [Exception] {
+        Write-Host $_.Exception.Message
         [MessageBox]::Show($_.Exception.Message + "fail to download :[" + $nmane_str + "]. check [$(Get-Date -UFormat %Y%m%d).log]", "Error", "OK", "Error")
     } finally {
     
@@ -386,16 +588,135 @@ $button_now_Click_download_url = {
 }
 $btn_now_lownload_url.Add_Click($button_now_Click_download_url)
 
-$now = @($lbl_now_line,$lbl_now_url, $txt_now_url,$btn_now_lownload_url, $obtn_now_extract,$lbl_now_save,$txt_now_save)
+$now = @($lbl_now_line,$lbl_now_url, $txt_now_url,$btn_now_lownload_url, $obtn_now_extract,$lbl_now_save,$txt_now_save, $lbl_now_save_time, $Combo_now_time1,$lbl_now_save_time1,$Combo_now_time2,$lbl_now_save_time2,$Combo_now_time3,$lbl_now_save_time3)
 
-#---------------------------------------------------
-# ÉtÉHÅ[ÉÄê›íË
-$f = New-Object Form
-$f.Text = $PROGRAM_NAME
-$f.Size = "470, 280"
-$f.MaximumSize = "470, 280"
+#-----------------------------------------------------------------------------
+$CRITERIA_HEIGHT_CR = $CRITERIA_HEIGHT + 260
+# „É©„Éô„É´„Å®ÂÖ•ÂäõÊ¨Ñ
+$lbl_copyright = New-Object Label
+$lbl_copyright.Text = "Copyright (c) Yuki-Kikuya, 2019-2021"
+$lbl_copyright.Location = "10, " + ($CRITERIA_HEIGHT_CR)
+$lbl_copyright.AutoSize = New-Object System.Drawing.Size(200, $DEFAULT_HEIGHT_SIZE)
+
+$f.Controls.AddRange($lbl_copyright)
+
+# -------------------- „É°„Éã„É•„Éº„Éê„Éº„ÅÆ‰ΩúÊàê -------------------------------------
+$mainMenu = New-Object System.Windows.Forms.MenuStrip
+$f.MainMenuStrip = $mainMenu
+$mainMenu.BackColor = "#383c3c"
+$mainMenu.forecolor ="white"
+
+#region „É°„Ç§„É≥„É°„Éã„É•„Éº„ÅÆÈ†ÖÁõÆËøΩÂä†
+# File„É°„Éã„É•„Éº - $menuFileh
+$menuFile = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuFile.Text = "Setting(S)"
+$menuFile.BackColor = "black"
+
+#------------------------------------
+
+$menuNewFile1 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuNewFile1.Text = "New"
+$menuNewFile1.BackColor = "black"
+$menuNewFile1.forecolor ="white"
+
+$menuFile.DropDownItems.Add($menuNewFile1)
+
+$menuNewFile2 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuNewFile2.Text = "Open Explorer"
+$menuNewFile2.BackColor = "black"
+$menuNewFile2.forecolor ="white"
+
+$menuNewFile2_1 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuNewFile2_1.Text = "Open Save Folder"
+$menuNewFile2_1.BackColor = "black"
+$menuNewFile2_1.forecolor ="white"
+
+$menuNewFile2_2 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuNewFile2_2.Text = "Open Server Folder"
+$menuNewFile2_2.BackColor = "black"
+$menuNewFile2_2.forecolor ="white"
+
+$menuNewFile2.DropDownItems.Add($menuNewFile2_1)
+$menuNewFile2.DropDownItems.Add($menuNewFile2_2)
+
+$menuFile.DropDownItems.Add($menuNewFile2)
+
+$menuNewFile3 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuNewFile3.Text = "Move Movie Server"
+$menuNewFile3.BackColor = "black"
+$menuNewFile3.forecolor ="white"
+
+$menuFile.DropDownItems.Add($menuNewFile3)
+
+#-----------------------------------------
+
+# Help„É°„Éã„É•„Éº - $menuFile
+$menuSite = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuSite.Text = "Site(S)"
+$menuSite.BackColor = "black"
+
+$menuSite1 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuSite1.Text = "AbemaTV"
+$menuSite1.BackColor = "black"
+$menuSite1.forecolor ="white"
+
+$menuSite2 = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuSite2.Text = "Dailymotion"
+$menuSite2.BackColor = "black"
+$menuSite2.forecolor ="white"
+
+$menuSite.DropDownItems.AddRange(@($menuSite1, $menuSite2))
+
+$menuSite1.add_click({
+    start ${CHROME_PATH} ${ABEMATV_URL}
+})
+$menuSite2.add_click({
+    start ${CHROME_PATH} ${DAILY_URL}
+})
+
+#-----------------------------------------
+
+# Help„É°„Éã„É•„Éº - $menuFile
+$menuHelp = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuHelp.Text = "Help(H)"
+$menuHelp.BackColor = "black"
+
+$mainMenu.Items.AddRange(@($menuFile, $menuSite, $menuHelp))
+
+$menuNewFile1.add_click({
+	[System.Windows.Forms.MessageBox]::Show("Menu Open Clicked")
+	# „Éï„Ç©„Éº„É†Ë®≠ÂÆö
+	$f_s = New-Object Form
+	$f_s.Text = "Setteing Item Menu"
+	$f_s.Size = "470, "+ ($CRITERIA_HEIGHT + 280)
+	$f_s.MaximumSize = "470, " + ($CRITERIA_HEIGHT + 280)
+	$f_s.BackColor = "black"
+	$f_s.forecolor ="white"
+	
+	
+	$f_s.ShowDialog()
+})
+
+$menuNewFile2_1.add_click({
+	ii ${FOLDER_PATH}\
+})
+
+$menuNewFile2_2.add_click({
+	ii ${SVR_PATH}\
+})
+
+$menuNewFile3.add_click({
+	move ${FOLDER_PATH}\*.mp4 ${SVR_PATH} -force
+	move ${FOLDER_PATH}\movie\*.mp4 ${SVR_PATH} -force
+    move ${FOLDER_PATH}\tmp\*.ts ${SVR_PATH}\tmp -force
+    move ${FOLDER_PATH}\tmp\*.mp4 ${SVR_PATH}\tmp -force
+})
+
+$f.Controls.Add($mainMenu)
+# ------------------------------------------------------------------------------
+
 $f.Controls.AddRange(@($lbl1, $lbl2,$mname, $name_save, $obtn, $btn, $sname, $lbl_line, $lbl_url,$url_url,$lbl_save,$name_save,$btn_download_url,$obtn_extract))
-# abemaê∂îzêMï€ë∂ópÉtÉHÅ[ÉÄí«â¡
+# abemaÁîüÈÖç‰ø°‰øùÂ≠òÁî®„Éï„Ç©„Éº„É†ËøΩÂä†
 $f.Controls.AddRange($now)
 $f.BackColor = "black"
 $f.forecolor ="white"
@@ -403,3 +724,6 @@ $f.MaximizeBox = $False
 $f.MinimizeBox = $False
 $f.FormBorderStyle = "Fixed3D"
 $f.ShowDialog()
+
+# „Ç≥„É≥„ÇΩ„Éº„É´„ÇíÈùûË°®Á§∫„Å´„Åô„Çã
+powershell -WindowStyle Hidden
